@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
-
+import { openFiles } from './events'
 const isProd: boolean = process.env.NODE_ENV === 'production';
 
 if (isProd) {
@@ -25,6 +25,7 @@ if (isProd) {
     await mainWindow.loadURL(`http://localhost:${port}/home`);
     mainWindow.webContents.openDevTools();
   }
+  openFiles();
 })();
 
 app.on('window-all-closed', () => {

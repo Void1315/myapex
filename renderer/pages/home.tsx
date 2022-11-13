@@ -9,6 +9,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Typography from '@material-ui/core/Typography';
 import Link from '../components/Link';
+import { ipcRenderer } from 'electron'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,12 +24,14 @@ function Home() {
   const classes = useStyles({});
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
-  const handleClick = () => setOpen(true);
+  const handleClick = () => {
+    ipcRenderer.send('openFile')
+  };
 
   return (
     <React.Fragment>
       <Head>
-        <title>Home - Nextron (with-typescript-material-ui)</title>
+        <title>Home11 - Nextron (with-typescript-material-ui)</title>
       </Head>
       <div className={classes.root}>
         <Dialog open={open} onClose={handleClose}>
