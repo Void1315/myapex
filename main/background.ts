@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import { app, Menu } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
 import { openFiles } from './events'
@@ -17,7 +17,7 @@ if (isProd) {
     width: 1000,
     height: 600,
   });
-
+  Menu.setApplicationMenu(null)
   if (isProd) {
     await mainWindow.loadURL('app://./home.html');
   } else {
@@ -25,7 +25,7 @@ if (isProd) {
     await mainWindow.loadURL(`http://localhost:${port}/home`);
     mainWindow.webContents.openDevTools();
   }
-  openFiles();
+  openFiles(mainWindow);
 })();
 
 app.on('window-all-closed', () => {

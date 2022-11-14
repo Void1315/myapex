@@ -5,36 +5,22 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Nextron: Main",
       "type": "node",
-      "request": "attach",
-      "protocol": "inspector",
-      "port": 9292,
-      "skipFiles": ["<node_internals>/**"],
-      "sourceMapPathOverrides": {
-        "webpack:///./~/*": "${workspaceFolder}/node_modules/*",
-        "webpack:///./*": "${workspaceFolder}/*",
-        "webpack:///*": "*"
-      }
+      "request": "launch",
+      "name": "Next: Node",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/next/dist/bin/next",
+      "runtimeArgs": ["-p", "8888", "./renderer"],
+      "console": "integratedTerminal"
     },
     {
-      "name": "Nextron: Renderer",
-      "type": "chrome",
-      "request": "attach",
-      "port": 5858,
-      "timeout": 10000,
-      "urlFilter": "http://localhost:*",
-      "webRoot": "${workspaceFolder}/app",
-      "sourceMapPathOverrides": {
-        "webpack:///./src/*": "${webRoot}/*"
-      }
-    }
-  ],
-  "compounds": [
-    {
-      "name": "Nextron: All",
-      "preLaunchTask": "dev",
-      "configurations": ["Nextron: Main", "Nextron: Renderer"]
+      "name": "Debug Main Process",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+      "args": [".", "8888"],
+      "outputCapture": "std",
+      "console": "integratedTerminal"
     }
   ]
 }
