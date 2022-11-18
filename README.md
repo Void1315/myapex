@@ -1,38 +1,16 @@
-<p align="center"><img src="https://i.imgur.com/flcMvDC.png"></p>
+# My-Apex
+> 用于apex一键更新cfg，开启sg、一键拾取、云同步自己的cfg配置等场景
 
-## Usage
+## dev启动
 
-### Create an App
+```bash
+git clone git@github.com:Void1315/myapex.git
 
-```
-# with npx
-$ npx create-nextron-app my-app --example with-typescript-material-ui
+pnpm install
 
-# with yarn
-$ yarn create nextron-app my-app --example with-typescript-material-ui
-
-# with pnpx
-$ pnpx create-nextron-app my-app --example with-typescript-material-ui
+pnpm run dev
 ```
 
-### Install Dependencies
+## 调试
 
-```
-$ cd my-app
-
-# using yarn or npm
-$ yarn (or `npm install`)
-
-# using pnpm
-$ pnpm install --shamefully-hoist
-```
-
-### Use it
-
-```
-# development mode
-$ yarn dev (or `npm run dev` or `pnpm run dev`)
-
-# production build
-$ yarn build (or `npm run build` or `pnpm run build`)
-```
+使用`vscode`进行调试，已配置好`launch.json`、`tasks.json`文件，请运行`Debug: All`配置即可。

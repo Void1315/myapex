@@ -5,15 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug: Node",
       "type": "node",
       "request": "launch",
-      "name": "Next: Node",
       "runtimeExecutable": "${workspaceFolder}/node_modules/next/dist/bin/next",
       "runtimeArgs": ["-p", "8888", "./renderer"],
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
     },
     {
-      "name": "Debug Main Process",
+      "name": "Debug: Main Process",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}",
@@ -21,6 +21,13 @@
       "args": [".", "8888"],
       "outputCapture": "std",
       "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug: All",
+      "preLaunchTask": "tsc:build",
+      "configurations": ["Debug: Node", "Debug: Main Process"]
     }
   ]
 }

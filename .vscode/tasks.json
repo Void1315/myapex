@@ -3,19 +3,9 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "dev",
-      "isBackground": true,
-      "problemMatcher": {
-        "owner": "custom",
-        "pattern": {
-          "regexp": ""
-        },
-        "background": {
-          "beginsPattern": "started server",
-          "endsPattern": "Debugger listening on"
-        }
-      },
-      "label": "dev"
+      "script": "tsc:build",
+      "problemMatcher": ["$tsc"],
+      "label": "tsc:build"
     }
   ]
 }

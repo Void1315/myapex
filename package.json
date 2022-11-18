@@ -7,6 +7,7 @@
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
+    "tsc:build": "tsc",
     "build": "nextron build",
     "build:win64": "nextron build --win --x64",
     "postinstall": "electron-builder install-app-deps"
