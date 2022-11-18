@@ -7,6 +7,7 @@ import Switch from '@material-ui/core/Switch'
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { ipcRenderer } from 'electron'
+import { useForm, useFieldArray, Controller } from 'react-hook-form'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,22 +27,16 @@ function Home() {
   const classes = useStyles({});
   const [apexRoot, setApexRoot] = useState('')
   const [childCfg, setChildCfg] = useState([])
-  const handleClick = () => {
-    ipcRenderer.send('selectApexDir')
+  const handleClick = async () => {
+    ipcRenderer.invoke('openApexDir').then((data) => {
+      console.log('data', data)
+      const { path, cfgData } = data ?? {}
+      setApexRoot(path)
+      setChildCfg(cfgData.childCfg)
+    })
+
   };
 
-  useEffect(() => {
-    ipcRenderer.addListener('selectedApexDir', (event, name) => {
-      setApexRoot(name)
-    })
-    ipcRenderer.addListener('loadCfg', (e, loadCfgData) => {
-      setChildCfg(loadCfgData.childCfg)
-    })
-    return () => {
-      ipcRenderer.removeAllListeners('selectedApexDir')
-      ipcRenderer.removeAllListeners('loadCfg')
-    }
-  }, [setApexRoot])
   return (
     <Container maxWidth="sm">
       <Head>
@@ -72,36 +67,47 @@ function Home() {
 
         </Grid>
       </div>
-      <ChildCfgList childCfg={childCfg} />
+      <ChildCfgForm defaultChildCfg={childCfg} />
     </Container>
   );
 };
+type TcfgData = {
+  name: string,
+  title: string,
+  status: boolean
+}[]
 
-const ChildCfgList = ({ childCfg }) => {
+const ChildCfgForm = ({ defaultChildCfg }) => {
+  const [cfgData, setCfgData] = useState<TcfgData>(defaultChildCfg)
   const classes = useStyles({});
-  const changeChildCfgStatus = (e: React.ChangeEvent<HTMLInputElement>, _value) => {
-    // console.log('changeChildCfgStatus', e.target.name)
-    ipcRenderer.send('changeChildCfgStatus', {
+  const changeChildCfgStatus = (e, _value, index) => {
+    ipcRenderer.invoke('changeChildCfgStatus', {
       name: e.target.name,
       value: _value
-    })
+    }).then(() => {
+      cfgData[index].status = _value
+      setCfgData([...cfgData])
+    }).catch(err => console.error(err))
   }
+
+  useEffect(()=>{
+    setCfgData([...defaultChildCfg])
+  }, [defaultChildCfg])
+
   return <Grid container>
-    {childCfg?.map?.(item => {
+    {cfgData?.map?.((item, index) => {
       return (<Grid key={item.name} container item justifyContent="space-between" alignItems="center" className={classes.childCfgItem}>
         <Grid item>
           <Typography>{item.title}</Typography>
         </Grid>
         <Grid item>
-          <Switch name={item.name} defaultChecked={item.status} onChange={changeChildCfgStatus} />
+          <Switch key={item.status + item.name} name={item.name} checked={item.status} inputProps={{ 'aria-label': 'controlled' }} onChange={(e, value) => changeChildCfgStatus(e, value, index)} />
         </Grid>
         <Grid item>
-          <Button disabled variant="contained" color="primary">高级功能</Button>
+          <Button disabled={!item.status} variant="contained" color="primary">高级功能</Button>
         </Grid>
       </Grid>)
     })}
-
-
   </Grid>
 }
 export default Home;

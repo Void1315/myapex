@@ -14,10 +14,13 @@
   },
   "dependencies": {
     "electron-serve": "^1.1.0",
-    "electron-store": "^8.1.0"
+    "electron-store": "^8.1.0",
+    "lodash": "^4.17.21",
+    "react-hook-form": "^7.39.4"
   },
   "devDependencies": {
     "@material-ui/core": "^4.12.4",
+    "@types/lodash": "^4.14.189",
     "@types/node": "^16.11.7",
     "@types/react": "^18.0.8",
     "electron": "^20.1.0",

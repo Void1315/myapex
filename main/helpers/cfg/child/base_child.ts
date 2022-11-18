@@ -79,7 +79,7 @@ class ChildCfgConfig {
         // 第二步 根据第一个文件找到所有cfg文件和配置项
         const thisConfig = CHILD_CFG_CONFIG[this.childCfgPrefix];
         let keys = Object.keys(thisConfig.childCfgContentConfig).map(item => parseInt(item))
-        let nextPath = `${this.mainCfg.getCfgPath()}//${firstFileName}`;
+        let nextPath = `${this.mainCfg.getCfgPath()}\\${firstFileName}`;
         const childReg = thisConfig.childCfgFilesReg;
         let childIndex = 0;
         while (fs.existsSync(nextPath)) {
@@ -93,7 +93,7 @@ class ChildCfgConfig {
             if (!result) break; // 到头了
             childIndex++
             this._childCfgConfigFiles.push({ name: result[0] });
-            nextPath = `${this.mainCfg.getCfgPath()}//${result[0]}`; // 读取下一个
+            nextPath = `${this.mainCfg.getCfgPath()}\\${result[0]}`; // 读取下一个
         }
         this.isExistFiles = true
     }

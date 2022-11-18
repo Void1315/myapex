@@ -31,7 +31,7 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
             return `${CFG_CONFIG.BIND_US_STANDARD} "${startKey}" "+jump; exec ${cfgFileName};" 0\n`
         },
         getInMainContent: (mainContent: string) => {
-            const reg = /bind_US_standard\s"(\w+)"\s".+sg_\w{8}\.cfg/mg
+            const reg = /bind_US_standard\s"(\w+)"\s".+sg_\w{8}\.cfg.*/m
             const result = reg.exec(mainContent)
             if (!result) return null
             return {
@@ -39,10 +39,10 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
                 start_key: result[1]
             };
         },
-        childCfgFilesReg: /sg_\w{8}\.cfg}/mg,
+        childCfgFilesReg: /sg_\w{8}\.cfg/mg,
         mainCfgContentConfig: {
             matchFunc: (mainContent: string) => {
-                let result = /"(\w+)"\s+"exec\s+(sg_\w{8}.cfg)"/mg.exec(mainContent)
+                let result = /bind_US_standard\s+"(\w+)"\s.*(sg_\w{8}\.cfg)/mg.exec(mainContent)
                 if (!result) return null;
                 return {
                     start_key: result[1],
