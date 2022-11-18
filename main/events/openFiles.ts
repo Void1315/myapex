@@ -1,5 +1,5 @@
-import { ipcMain, ipcRenderer, dialog } from 'electron'
-import { CfgMainConfig } from '../helpers/format_cfg'
+import { ipcMain, dialog } from 'electron'
+import CfgMainConfig from '../helpers/cfg/main/cfg_main_config'
 
 let cfg: CfgMainConfig = undefined
 
