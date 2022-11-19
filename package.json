@@ -13,6 +13,8 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@fontsource/roboto": "^4.5.8",
+    "@material-ui/icons": "^4.11.3",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",
     "lodash": "^4.17.21",

@@ -4,6 +4,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { theme } from '../lib/theme';
 import type { AppProps } from 'next/app';
+import '@fontsource/roboto';
 
 export default function(props: AppProps) {
   const { Component, pageProps } = props;
