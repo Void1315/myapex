@@ -8,5 +8,5 @@ script:
   - yarn run test
 cache: yarn
 before_install:
-  - sudo apt install --install-recommends winehq-stable
+  - sudo apt install --install-recommends wine-stable
   - sudo apt install --no-install-recommends -y gcc-multilib g++-multilib
