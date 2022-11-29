@@ -9,8 +9,9 @@ script:
 cache: yarn
 deploy:
   provider: releases
-  token: "$GITHUB_OAUTH_TOKEN"
-  file: "README.md"
+  token: ${GITHUB_OAUTH_TOKEN}
+  file:
+    - README.md
   skip_cleanup: true
   on:
     tags: true
