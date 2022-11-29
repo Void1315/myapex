@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "my-apex",
-  "description": "个人用apex工具箱",
+  "description": "个人用apex工具箱 测试版",
   "version": "1.0.0",
   "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
   "main": "app/background.js",
