@@ -32,6 +32,13 @@ export default (mainWindow: Electron.CrossProcessExports.BrowserWindow) => {
         })
     })
 
+    ipcMain.handle('changeChildCfgConfig', (_, item) => {
+        return new Promise<void>((resolve, reject) => {
+            // cfg.changeChildCfgStatus(item) // TODO 需要实现更改子项参数设置
+            resolve()
+        })
+    })
+
 
 }
 
