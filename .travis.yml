@@ -1,5 +1,7 @@
 language: node_js
 dist: focal
+arch:
+  - arm64
 node_js:
   - 18
 script:
@@ -7,3 +9,6 @@ script:
 cache: yarn
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
+before_install:
+  - sudo apt install --install-recommends winehq-stable
+  - sudo apt install --no-install-recommends -y gcc-multilib g++-multilib
