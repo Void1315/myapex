@@ -1,7 +1,9 @@
 language: node_js
 dist: focal
 node_js:
-  - lts/*
+  - 18
 script:
   - yarn run test
 cache: yarn
+before_cache:
+  - rm -rf $HOME/.cache/electron-builder/wine
