@@ -15,3 +15,11 @@ before_install:
   - sudo apt update
   - sudo apt install --install-recommends winehq-stable
   - sudo apt install --no-install-recommends -y gcc-multilib g++-multilib
+deploy:
+  provider: releases
+  api_key: "GITHUB OAUTH TOKEN"
+  file: "FILE TO UPLOAD"
+  skip_cleanup: true
+  on:
+    tags: true
+  draft: true

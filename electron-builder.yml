@@ -1,6 +1,6 @@
 appId: com.example.nextron
-productName: My Nextron App
-copyright: Copyright © 2018 Yoshihide Shiono
+productName: Apex工具箱
+copyright: Copyright © 2022 asahichyan33
 directories:
   output: dist
   buildResources: resources
