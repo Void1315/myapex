@@ -10,7 +10,8 @@
     "tsc:build": "tsc",
     "build": "nextron build",
     "build:win64": "nextron build --win --x64",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "test": "nextron build"
   },
   "dependencies": {
     "@fontsource/roboto": "^4.5.8",
