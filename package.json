@@ -9,7 +9,8 @@
     "dev": "nextron",
     "tsc:build": "tsc",
     "build": "nextron build --win --ia32",
-    "test": "yarn run build"
+    "test": "yarn run build",
+    "asd": "echo 123"
   },
   "dependencies": {
     "@fontsource/roboto": "^4.5.8",
