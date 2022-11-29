@@ -63,7 +63,6 @@ type TcfgData = {
   status: boolean
 }[]
 
-
 const ChildCfgForm = ({ defaultChildCfg }) => {
   const [cfgData, setCfgData] = useState<TcfgData>(defaultChildCfg)
   const classes = useStyles({});
