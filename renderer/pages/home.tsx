@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import useStyles from './homeStyles'
+import useStyles from '../styles/homeStyles'
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid'
 import Switch from '@material-ui/core/Switch'

@@ -6,9 +6,9 @@
 ```bash
 git clone git@github.com:Void1315/myapex.git
 
-pnpm install
+yarn
 
-pnpm run dev
+yarn run dev
 ```
 
 ## 调试
