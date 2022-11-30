@@ -24,7 +24,7 @@ class ChildCfgConfig {
     public childCfgFilesReg: RegExp;
     public childCfgInMainCfgContent: string; // 子项cfg在main文件中 开启的文字内容
     public startKey: string; // 启动键
-    protected _params: {} = {}
+    public _params: {} = {}
     /**
      * 构造子项cfg的构造函数
      * @param mainCfg 主cfg对象
@@ -44,9 +44,14 @@ class ChildCfgConfig {
         const defaultConfig = CHILD_CFG_CONFIG[this.childCfgPrefix];
         this.childCfgFilesReg = defaultConfig.childCfgFilesReg;
         this.startKey = this.startKey ?? defaultConfig.defaultStartKey;
+        for (let key in defaultConfig.childCfgContentConfig) {
+            for (let param of defaultConfig.childCfgContentConfig[key].fields) {
+                this._params = { ...this._params, [param.id]: param.defaultValue }
+            }
+        }
     }
 
-    protected changeStartKey(newStartKey: string){
+    protected changeStartKey(newStartKey: string) {
         this.startKey = newStartKey;
         const newChildCfgInMainCfgContent = CHILD_CFG_CONFIG[this.childCfgPrefix].getDefaultInMainContent(this._childCfgFirstFileName, this.startKey)
         this.mainCfg.mainCfgContent = this.mainCfg.mainCfgContent.replaceAll(this.childCfgInMainCfgContent, newChildCfgInMainCfgContent)
@@ -98,11 +103,11 @@ class ChildCfgConfig {
         this.isExistFiles = true
     }
 
-    protected getNextCfgName(index: number){
-        
-        if(CHILD_CFG_CONFIG[this.childCfgPrefix].size == index + 1){
+    protected getNextCfgName(index: number) {
+
+        if (CHILD_CFG_CONFIG[this.childCfgPrefix].size == index + 1) {
             return this.mainCfg.mainCfgFileName;
-        }else{
+        } else {
             return `${this.childCfgPrefix}_${getRandomString()}.cfg`
         }
     }
@@ -113,7 +118,7 @@ class ChildCfgConfig {
             for (let i = 0, len = Object.keys((CHILD_CFG_CONFIG[this.childCfgPrefix]).childCfgContentConfig).length; i < len; i++) {
                 thisCfgName !== this.mainCfg.mainCfgFileName && this._childCfgConfigFiles.push({ name: thisCfgName })
                 let nextCfgName = this.getNextCfgName(i)
-                fs.writeFileSync(`${this.mainCfg.getCfgPath()}\\${thisCfgName}`, CHILD_CFG_CONFIG[this.childCfgPrefix].childCfgContentConfig[i].generateContentFunc(nextCfgName, this._params[i]), { flag: "w+" })
+                fs.writeFileSync(`${this.mainCfg.getCfgPath()}\\${thisCfgName}`, CHILD_CFG_CONFIG[this.childCfgPrefix].childCfgContentConfig[i].generateContentFunc(nextCfgName, this._params), { flag: "w+" })
 
                 thisCfgName = nextCfgName
             }
@@ -122,6 +127,11 @@ class ChildCfgConfig {
             console.error(err)
             return undefined;
         }
+    }
+
+    public updateChildCfg() {
+        this.uninstallChildCfg()
+        this.installChildCfg()
     }
 
     // 生成子项cfg文件，并返回文件名称列表

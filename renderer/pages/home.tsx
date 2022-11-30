@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import useStyles from '../styles/homeStyles'
 import Button from '@material-ui/core/Button';
@@ -9,18 +9,20 @@ import Container from '@material-ui/core/Container';
 import { ipcRenderer } from 'electron'
 import { Tooltip, TextField, Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
 import { Settings, Help } from '@material-ui/icons';
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState, AppDispatch } from '../store'
+import debounce from 'lodash/debounce'
 function Home() {
   const classes = useStyles({});
-  const [apexRoot, setApexRoot] = useState('')
-  const [childCfg, setChildCfg] = useState([])
+  const dispatch = useDispatch<AppDispatch>()
+  const { apexRoot } = useSelector((state: RootState) => state.home)
   const handleClick = async () => {
     ipcRenderer.invoke('openApexDir').then((data) => {
-      console.log('data', data)
-      const { path, cfgData } = data ?? {}
-      setApexRoot(path)
-      setChildCfg(cfgData.childCfg)
-    })
+      console.log('openApexDir返回数据: ', data)
+      const { path, cfgData: _cfgData } = data ?? {}
 
+      dispatch({ type: 'home/setState', payload: { apexRoot: path, cfgData: _cfgData } })
+    })
   };
 
   return (
@@ -53,62 +55,89 @@ function Home() {
 
         </Grid>
       </div>
-      <ChildCfgForm defaultChildCfg={childCfg} />
+      <ChildCfgForm />
     </Container>
   );
 };
-type TcfgData = {
-  name: string,
-  title: string,
-  status: boolean
-}[]
 
-const ChildCfgForm = ({ defaultChildCfg }) => {
-  const [cfgData, setCfgData] = useState<TcfgData>(defaultChildCfg)
-  const classes = useStyles({});
-  const changeChildCfgStatus = (e, _value, index) => {
-    ipcRenderer.invoke('changeChildCfgStatus', {
-      name: e.target.name,
-      value: _value
-    }).then(() => {
-      cfgData[index].status = _value
-      setCfgData([...cfgData])
-    }).catch(err => console.error(err))
-  }
 
-  useEffect(() => {
-    setCfgData([...defaultChildCfg])
-  }, [defaultChildCfg])
-
+const ChildCfgForm = () => {
   return <Grid container>
     <ChildCfgFormItem></ChildCfgFormItem>
-    {cfgData?.map?.((item, index) => {
-      return (<Grid key={item.name} container item justifyContent="space-between" alignItems="center" className={classes.childCfgItem}>
-        <Grid item>
-          <Typography>{item.title}</Typography>
-        </Grid>
-        <Grid item>
-          <Switch key={item.status + item.name} name={item.name} checked={item.status} inputProps={{ 'aria-label': 'controlled' }} onChange={(e, value) => changeChildCfgStatus(e, value, index)} />
-        </Grid>
-        <Grid item>
-          <Button disabled={!item.status} variant="contained" color="primary">高级功能</Button>
-        </Grid>
-      </Grid>)
-    })}
   </Grid>
 }
 
 
 const ChildCfgFormItem = () => {
   const classes = useStyles({});
-  const CfgTitle = () => {
+  const dispatch = useDispatch<AppDispatch>()
+  const { cfgData } = useSelector((state: RootState) => state.home)
+  const changeCfgStatus = (e) => {
+    const id = e.target.name
+    const newValue = e.target.checked
+    ipcRenderer.invoke('changeChildCfgStatus', {
+      id,
+      value: newValue
+    }).then(() => {
+      let _cfgData = cfgData.map(item => {
+        if (item.id === id) {
+          return { ...item, value: newValue }
+        }
+        return item
+      })
+
+      dispatch({ type: 'home/setState', payload: { cfgData: _cfgData } })
+
+    }).catch(err => console.error(err))
+  }
+
+
+  const sendUpdateParams = debounce(({ cfgName, paramName, value }) => {
+    console.log('发送', {
+      cfgName,
+      paramName,
+      value
+    })
+    ipcRenderer.invoke('changeCfgParams', {
+      cfgName,
+      paramName,
+      value
+    }).then(() => {
+      let _cfgData = cfgData.map(item => {
+        if (item.id === cfgName) {
+          return {
+            ...item, child: item.child.map(_item => {
+              if (_item.id === paramName)
+                return { ..._item, value }
+              return _item
+            })
+          }
+        }
+        return item
+      })
+      dispatch({ type: 'home/setState', payload: { cfgData: _cfgData } })
+
+    }).catch(err => console.error(err))
+  }, 300)
+
+  const paramChange = (e) => {
+    const newValue = e.target.value
+    const name = e.target.name;
+    const [cfgName, paramName] = (name as string).split('.')
+    sendUpdateParams({
+      value: newValue, cfgName,
+      paramName,
+    })
+  }
+
+  const CfgTitle = ({ cfg }) => {
     return (
       <Grid container alignItems='center'>
         <Grid item style={{ marginRight: 12 }}>
-          <span className={classes.childCfgTitle}>{"一键SG"}</span>
+          <span className={classes.childCfgTitle}>{cfg.title}</span>
         </Grid>
         <Grid item>
-          <Switch color="primary" />
+          <Switch color="primary" name={cfg.id} checked={cfg.value} onChange={changeCfgStatus} />
         </Grid>
       </Grid>
     )
@@ -124,17 +153,20 @@ const ChildCfgFormItem = () => {
     </Grid>
   }
 
-  const FormCfgChildConfig = ({ type }) => {
+  const FormCfgChildConfig = ({ type, value, onChange, title, disabled, name }: any) => {
 
     return <Grid>
       {
         type === "number" && <TextField
-          id="standard-number"
-          label="最大fps"
+          label={title}
           type="number"
           variant="outlined"
+          name={name}
           size="small"
+          defaultValue={parseInt(value)}
+          onChange={onChange}
           style={{ width: 180 }}
+          disabled={disabled}
           InputLabelProps={{
             shrink: true,
           }}
@@ -142,12 +174,15 @@ const ChildCfgFormItem = () => {
       }
       {
         type === "key" && <FormControl size="small" variant="outlined">
-          <InputLabel id="demo-simple-select-outlined-label">请选择启动键</InputLabel>
+          <InputLabel id={`label-${name}`}>请选择启动键</InputLabel>
           <Select
-            labelId="demo-simple-select-outlined-label"
-            id="demo-simple-select"
+            labelId={`${`label-${name}`}`}
+            name={name}
             label="请选择启动键"
             style={{ minWidth: 180 }}
+            disabled={disabled}
+            onChange={onChange}
+            defaultValue={value}
           >
             <MenuItem value={10}>Ten</MenuItem>
             <MenuItem value={20}>Twenty</MenuItem>
@@ -158,7 +193,7 @@ const ChildCfgFormItem = () => {
     </Grid>
   }
 
-  const CfgAdvancedSettings = () => {
+  const CfgAdvancedSettings = ({ childCfg, disabled, parentId }) => {
     return <Grid container>
       <Grid container item alignItems='center' style={{
         color: 'gray',
@@ -173,26 +208,33 @@ const ChildCfgFormItem = () => {
       </Grid>
       {/* 到时候这里map */}
       <Grid container item >
-
-        <Grid style={{marginBottom: 16}} container item justifyContent="space-between" alignItems='center' xs={12} >
+        {/*  大伙都有启动键 */}
+        <Grid style={{ marginBottom: 16 }} container item justifyContent="space-between" alignItems='center' xs={12} >
           <FormLabel title="启动键" tooltipText="按下此键，才能开始cfg操作" />
-          <FormCfgChildConfig type={'key'} />
+          <FormCfgChildConfig name={`${parentId}.startKey`} type={'key'} disabled={disabled} onChange={paramChange} />
+          {/* // TODO 启动键没传 */}
         </Grid>
 
-        <Grid  container item justifyContent="space-between" alignItems='center' xs={12} >
-          <FormLabel title="最小fps" tooltipText="sg时，会降低fps增加成功率" />
-          <FormCfgChildConfig type={'number'} />
-        </Grid>
+        {
+          childCfg?.map(item => <Grid key={item.id} style={{ marginBottom: 16 }} container item justifyContent="space-between" alignItems='center' xs={12} >
+            <FormLabel title={item.title} tooltipText={item.document} />
+            <FormCfgChildConfig name={`${parentId}.${item.id}`} type={item.type} value={item.value} title={item.title} disabled={disabled} onChange={paramChange} />
+          </Grid>)
+        }
+
       </Grid>
-      
+
     </Grid>
   }
   return (<>
     <Grid container className={classes.childCfgFormItemBox}>
-      <CfgTitle />
-      <Grid container item style={{ padding: 8 }}>
-        <CfgAdvancedSettings />
-      </Grid>
+      {
+        cfgData?.map(cfg => {
+          return <React.Fragment key={cfg.id}><CfgTitle cfg={cfg} /><Grid container item style={{ padding: 8 }}>
+            <CfgAdvancedSettings parentId={cfg.id} disabled={!cfg.value} childCfg={cfg.child} />
+          </Grid></React.Fragment>
+        })
+      }
     </Grid>
   </>)
 }

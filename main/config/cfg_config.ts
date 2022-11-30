@@ -17,7 +17,7 @@ interface childCfgConfigProps {
     childCfgContentConfig: {
         [key: number]: {
             name: string,
-            fields: { id: string, name: string, label: string, type: string, defaultValue: string | number }[]
+            fields: { id: string, title: string, document?: string, type: 'key' | 'number' | 'switch', defaultValue: string | number }[]
             generateContentFunc: (next_cfg: string, ...any) => string
             matchFunc: (string) => any;
         }
@@ -57,8 +57,8 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
                 fields: [
                     {
                         id: 'start_max_fps',
-                        name: 'fps锁定',
-                        label: '',
+                        title: 'fps最小值',
+                        document: 'sg时，将锁定低fps，来增加成功率',
                         type: 'number',
                         defaultValue: 30,
                     }
@@ -78,8 +78,8 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
                 fields: [
                     {
                         id: 'end_max_fps',
-                        name: 'fps锁定',
-                        label: '',
+                        title: 'fps最大值',
+                        document: 'sg结束，将恢复到的最大fps，0为无限制',
                         type: 'number',
                         defaultValue: 0,
                     }

@@ -11,6 +11,15 @@ interface cfgToRenderDataProps {
     }[]
 }
 
+type TCfgRenderData = {
+    id: string,
+    value: string | boolean | number,
+    title: string,
+    document?: string,
+    type: 'key' | 'number' | 'switch',
+    child?: TCfgRenderData
+}[]
+
 class CfgMainConfig {
     public isOpenSg: boolean = false; // 是否开启 一键sg
     public isOpenZword: boolean = false; // 是否开启 z字抖动
@@ -22,11 +31,12 @@ class CfgMainConfig {
     public gameRootPath = ''; // 游戏根目录路径
     private childCfg: { sg: CfgSgConfig } | {} = {}
 
-    private supportChildCfg = [
+    private supportChildCfg = [ // TODO 到时候移动到配置中
         {
             name: 'sg',
             title: '一键sg',
             type: CfgSgConfig,
+            document: '',
         }
     ]
 
@@ -37,18 +47,30 @@ class CfgMainConfig {
     }
 
 
-
-    public cfgToRenderData(): cfgToRenderDataProps {
-        let renderCfg: cfgToRenderDataProps = { childCfg: [] }
-        for (let child of this.supportChildCfg) {
-            renderCfg.childCfg.push({
-                name: child.name,
-                title: child.title,
-                status: (this.childCfg?.[child.name] as ChildCfgConfig)?.isExistFiles || false,
+    /**
+     * 将cfg配置转换为前端识别的json数据
+     * @returns 
+     */
+    public cfgToRenderData(): TCfgRenderData {
+        let renderCfgData: TCfgRenderData = []
+        for (let cfg of this.supportChildCfg) { // 第一层 主功能
+            const thisChildCfg = (this.childCfg?.[cfg.name] as ChildCfgConfig)
+            renderCfgData.push({
+                id: cfg.name,
+                title: cfg.title,
+                type: 'switch',
+                document: cfg.document,
+                value: thisChildCfg?.isExistFiles || false,
+                child: []
             })
+            let thisChildCfgRenderData = renderCfgData[renderCfgData.length - 1]
+            for (let child in CHILD_CFG_CONFIG[cfg.name].childCfgContentConfig) {
+                for (let params of CHILD_CFG_CONFIG[cfg.name].childCfgContentConfig[child].fields) {
+                    thisChildCfgRenderData.child.push({ ...params, value: thisChildCfg._params[params.id] || params.defaultValue })
+                }
+            }
         }
-        return renderCfg
-
+        return renderCfgData
     }
 
     public loadCfg() {
@@ -74,7 +96,7 @@ class CfgMainConfig {
             for (let childCfg of this.supportChildCfg) {
                 const { content: childCfgInMainCfgContent, start_key } = CHILD_CFG_CONFIG[childCfg.name].getInMainContent(this.mainCfgContent) || {}
                 this.childCfg[childCfg.name] = new childCfg.type(this, childCfg.name, childCfgInMainCfgContent, start_key);
-                
+
             }
         } catch (err) {
             console.error(err)
@@ -90,12 +112,31 @@ class CfgMainConfig {
         return `${this.gameRootPath}\\cfg\\${this.mainCfgFileName}`;
     }
 
-    public changeChildCfgStatus(item: { name: string, value: boolean }) {
+    public changeChildCfgStatus(item: { id: string, value: boolean }) {
         if (!item.value) {
-            this.uninstallChildCfg([item.name])
+            this.uninstallChildCfg([item.id])
         } else {
-            this.installChildCfg([item.name])
+            this.installChildCfg([item.id])
         }
+    }
+
+    public changeChildCfgParams(data: { cfgName: string, paramName: string, value: any }) {
+        const { cfgName, paramName, value } = data;
+        if (paramName === 'startKey') {
+            (this.childCfg[cfgName] as ChildCfgConfig).startKey = value
+        } else {
+            const paramsKeys = Object.keys((this.childCfg[cfgName] as ChildCfgConfig)._params)
+            if (paramsKeys.includes(paramName)) {
+                (this.childCfg[cfgName] as ChildCfgConfig)._params[paramName] = value
+                console.log('_params', (this.childCfg[cfgName] as ChildCfgConfig)._params)
+
+            } else {
+                throw new Error('不存在的参数!')
+            }
+        }
+        this.uninstallChildCfg([cfgName]);
+        this.installChildCfg([cfgName]);
+        // (this.childCfg[cfgName] as ChildCfgConfig).updateChildCfg()
     }
 
     private installChildCfg(names: string[]) {
@@ -104,7 +145,7 @@ class CfgMainConfig {
                 if (!(this.childCfg[name] as ChildCfgConfig).isExistFiles && !this.mainCfgContent.includes((this.childCfg[name] as ChildCfgConfig).childCfgInMainCfgContent)) {
 
                     (this.childCfg[name] as ChildCfgConfig).installChildCfg();
-                    
+
                     this.mainCfgContent += (this.childCfg[name] as ChildCfgConfig).childCfgInMainCfgContent
 
                     this.updateMainCfg();

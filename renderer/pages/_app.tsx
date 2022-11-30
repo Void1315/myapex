@@ -2,11 +2,12 @@ import React from 'react';
 import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { Provider } from 'react-redux'
 import { theme } from '../lib/theme';
 import type { AppProps } from 'next/app';
 import '@fontsource/roboto';
-
-export default function(props: AppProps) {
+import store from '../store'
+export default function (props: AppProps) {
   const { Component, pageProps } = props;
 
   React.useEffect(() => {
@@ -23,7 +24,9 @@ export default function(props: AppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Component {...pageProps} />
+        <Provider store={store}>
+          <Component {...pageProps} />
+        </Provider>
       </ThemeProvider>
     </React.Fragment>
   );

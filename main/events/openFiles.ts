@@ -32,6 +32,17 @@ export default (mainWindow: Electron.CrossProcessExports.BrowserWindow) => {
         })
     })
 
+    ipcMain.handle('changeCfgParams', (_, data) => {
+        return new Promise<void>((resolve, reject) => {
+            try{
+                cfg.changeChildCfgParams(data)
+                resolve()
+            }catch(e){
+                reject(e)
+            }
+        })
+    })
+
     ipcMain.handle('changeChildCfgConfig', (_, item) => {
         return new Promise<void>((resolve, reject) => {
             // cfg.changeChildCfgStatus(item) // TODO 需要实现更改子项参数设置

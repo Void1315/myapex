@@ -13,10 +13,12 @@
   "dependencies": {
     "@fontsource/roboto": "^4.5.8",
     "@material-ui/icons": "^4.11.3",
+    "@reduxjs/toolkit": "^1.9.1",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",
     "lodash": "^4.17.21",
-    "react-hook-form": "^7.39.4"
+    "react-hook-form": "^7.39.4",
+    "react-redux": "^8.0.5"
   },
   "devDependencies": {
     "@material-ui/core": "^4.12.4",
