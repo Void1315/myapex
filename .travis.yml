@@ -21,7 +21,8 @@ before_install:
 jobs:
   include:
     - stage: github release
-      script: echo "构建发布到github... 发布版为:[ ${TRAVIS_TAG} ]"
+      script: echo "build to github... version is :[ ${TRAVIS_TAG} ]"
+      script: ls ./dist/
       deploy:
         provider: releases
         token: ${GITHUB_OAUTH_TOKEN}
