@@ -7,7 +7,7 @@ node_js:
 env:
   - FILE_TO_UPLOAD="./dist/*.exe"
 script:
-  - yarn run test
+  - yarn run build
 cache: yarn
 before_install:
   - sudo dpkg --add-architecture i386
@@ -19,9 +19,7 @@ before_install:
   - sudo apt -qq install --no-install-recommends -y gcc-multilib g++-multilib
 
 deploy:
-  script: 
-    - echo "build to github... version is :[ ${TRAVIS_TAG} ]"
-    - ls ./
+  script: echo "build to github... version is :[ ${TRAVIS_TAG} ]"
   provider: releases
   token: ${GITHUB_OAUTH_TOKEN}
   file: ${FILE_TO_UPLOAD}
