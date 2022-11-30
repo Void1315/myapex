@@ -21,8 +21,9 @@ before_install:
 jobs:
   include:
     - stage: github release
-      script: ls ./
+      script: echo "build to github... version is :[ ${TRAVIS_TAG} ]"
       deploy:
+        script: ls ./
         provider: releases
         token: ${GITHUB_OAUTH_TOKEN}
         file: ${FILE_TO_UPLOAD}
