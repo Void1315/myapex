@@ -4,6 +4,8 @@ arch:
   - amd64
 node_js:
   - 18
+env:
+  - FILE_TO_UPLOAD="./dist/*.exe"
 script:
   - yarn run test
 cache: yarn
@@ -12,14 +14,19 @@ before_install:
   - sudo mkdir -pm755 /etc/apt/keyrings
   - sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
   - sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources
-  - sudo apt update
-  - sudo apt install --install-recommends winehq-stable
-  - sudo apt install --no-install-recommends -y gcc-multilib g++-multilib
-deploy:
-  provider: releases
-  token: ${GITHUB_OAUTH_TOKEN}
-  file: ${FILE_TO_UPLOAD}
-  skip_cleanup: true
-  on:
-    tags: true
-  draft: true
+  - sudo apt -qq update
+  - sudo apt -qq install --install-recommends winehq-stable
+  - sudo apt -qq install --no-install-recommends -y gcc-multilib g++-multilib
+
+jobs:
+  include:
+    - stage: github release
+      script: echo "构建发布到github... 发布版为:[ ${TRAVIS_TAG} ]"
+      deploy:
+        provider: releases
+        token: ${GITHUB_OAUTH_TOKEN}
+        file: ${FILE_TO_UPLOAD}
+        skip_cleanup: true
+        on:
+          tags: true
+        draft: true
