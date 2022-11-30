@@ -22,7 +22,7 @@ jobs:
   include:
     - stage: github release
       script: echo "build to github... version is :[ ${TRAVIS_TAG} ]"
-      script: ls ./dist/
+      script: ls ./
       deploy:
         provider: releases
         token: ${GITHUB_OAUTH_TOKEN}
