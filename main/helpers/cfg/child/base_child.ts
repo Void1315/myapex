@@ -51,10 +51,11 @@ class ChildCfgConfig {
         }
     }
 
-    protected changeStartKey(newStartKey: string) {
+    public changeStartKey(newStartKey: string) {
         this.startKey = newStartKey;
         const newChildCfgInMainCfgContent = CHILD_CFG_CONFIG[this.childCfgPrefix].getDefaultInMainContent(this._childCfgFirstFileName, this.startKey)
         this.mainCfg.mainCfgContent = this.mainCfg.mainCfgContent.replaceAll(this.childCfgInMainCfgContent, newChildCfgInMainCfgContent)
+        this.childCfgInMainCfgContent = newChildCfgInMainCfgContent
     }
     /**
      * 尝试去main中查找子项第一个cfg文件名称，如果没有就生成一个

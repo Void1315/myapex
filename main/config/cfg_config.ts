@@ -98,12 +98,10 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
     },
 }
 
-
-
 export {
     CFG_CONFIG,
     SG_START_CFGREG,
     SG_END_CFGREG,
     SG_EXIST_REG,
-    CHILD_CFG_CONFIG
+    CHILD_CFG_CONFIG,
 }

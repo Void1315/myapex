@@ -7,11 +7,12 @@ import Switch from '@material-ui/core/Switch'
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { ipcRenderer } from 'electron'
-import { Tooltip, TextField, Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
+import { Tooltip, TextField, Select, MenuItem, InputLabel, FormControl, ListSubheader } from '@material-ui/core';
 import { Settings, Help } from '@material-ui/icons';
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, AppDispatch } from '../store'
 import debounce from 'lodash/debounce'
+import { KEY_MAP } from '../config'
 function Home() {
   const classes = useStyles({});
   const dispatch = useDispatch<AppDispatch>()
@@ -154,7 +155,16 @@ const ChildCfgFormItem = () => {
   }
 
   const FormCfgChildConfig = ({ type, value, onChange, title, disabled, name }: any) => {
-
+    const renderGroupKeys = (group) => {
+      const items = group.keys.map(key => {
+        return (
+          <MenuItem key={key.value} value={key.value}>
+            {key.name}
+          </MenuItem>
+        );
+      });
+      return [<ListSubheader style={{ cursor: 'default', }}>{group.group_name}</ListSubheader>, items];
+    }
     return <Grid>
       {
         type === "number" && <TextField
@@ -184,9 +194,9 @@ const ChildCfgFormItem = () => {
             onChange={onChange}
             defaultValue={value}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {
+              KEY_MAP?.map(key => renderGroupKeys(key))
+            }
           </Select>
         </FormControl>
       }
@@ -209,11 +219,10 @@ const ChildCfgFormItem = () => {
       {/* 到时候这里map */}
       <Grid container item >
         {/*  大伙都有启动键 */}
-        <Grid style={{ marginBottom: 16 }} container item justifyContent="space-between" alignItems='center' xs={12} >
+        {/* <Grid style={{ marginBottom: 16 }} container item justifyContent="space-between" alignItems='center' xs={12} >
           <FormLabel title="启动键" tooltipText="按下此键，才能开始cfg操作" />
           <FormCfgChildConfig name={`${parentId}.startKey`} type={'key'} disabled={disabled} onChange={paramChange} />
-          {/* // TODO 启动键没传 */}
-        </Grid>
+        </Grid> */}
 
         {
           childCfg?.map(item => <Grid key={item.id} style={{ marginBottom: 16 }} container item justifyContent="space-between" alignItems='center' xs={12} >

@@ -64,10 +64,18 @@ class CfgMainConfig {
                 child: []
             })
             let thisChildCfgRenderData = renderCfgData[renderCfgData.length - 1]
+            thisChildCfgRenderData.child.push({
+                id: 'startKey',
+                title: '启动键',
+                type: 'key',
+                document: '按下此键，才能开始cfg操作',
+                value: thisChildCfg?.startKey,
+            })
             for (let child in CHILD_CFG_CONFIG[cfg.name].childCfgContentConfig) {
                 for (let params of CHILD_CFG_CONFIG[cfg.name].childCfgContentConfig[child].fields) {
                     thisChildCfgRenderData.child.push({ ...params, value: thisChildCfg._params[params.id] || params.defaultValue })
                 }
+                // 最后添加启动键进去
             }
         }
         return renderCfgData
@@ -123,7 +131,8 @@ class CfgMainConfig {
     public changeChildCfgParams(data: { cfgName: string, paramName: string, value: any }) {
         const { cfgName, paramName, value } = data;
         if (paramName === 'startKey') {
-            (this.childCfg[cfgName] as ChildCfgConfig).startKey = value
+            // (this.childCfg[cfgName] as ChildCfgConfig).startKey = value
+            (this.childCfg[cfgName] as ChildCfgConfig).changeStartKey(value)
         } else {
             const paramsKeys = Object.keys((this.childCfg[cfgName] as ChildCfgConfig)._params)
             if (paramsKeys.includes(paramName)) {
