@@ -1,5 +1,6 @@
 import { getRandomString } from '../../../utils'
 import CfgSgConfig from '../child/cfg_sg_config'
+import CfgZJitterConfig from '../child/cfg_z_jitter_config'
 import { CHILD_CFG_CONFIG } from '../../../config/cfg_config'
 import ChildCfgConfig from '../child/base_child'
 import fs from 'fs'
@@ -20,6 +21,21 @@ type TCfgRenderData = {
     child?: TCfgRenderData
 }[]
 
+const SUPPORT_CHILD_CFG = [ // 当前支持的cfg
+    {
+        name: 'sg',
+        title: '一键sg',
+        type: CfgSgConfig,
+        document: '',
+    },
+    {
+        name: 'zJitter',
+        title: 'z字回旋',
+        type: CfgZJitterConfig,
+        document: '',
+    }
+]
+
 class CfgMainConfig {
     public isOpenSg: boolean = false; // 是否开启 一键sg
     public isOpenZword: boolean = false; // 是否开启 z字抖动
@@ -31,14 +47,7 @@ class CfgMainConfig {
     public gameRootPath = ''; // 游戏根目录路径
     private childCfg: { sg: CfgSgConfig } | {} = {}
 
-    private supportChildCfg = [ // TODO 到时候移动到配置中
-        {
-            name: 'sg',
-            title: '一键sg',
-            type: CfgSgConfig,
-            document: '',
-        }
-    ]
+    private supportChildCfg = SUPPORT_CHILD_CFG
 
     constructor(gameRootPath: string) {
         this.gameRootPath = gameRootPath;

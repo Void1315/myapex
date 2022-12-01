@@ -13,6 +13,10 @@ const KEY_MAP = [
                 name: 'Tab键',
                 value: 'Tab'
             }, 
+            {
+                name: 'C',
+                value: 'c'
+            }
         ]
     },
     {

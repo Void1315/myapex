@@ -28,10 +28,10 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
         size: 2,
         defaultStartKey: 'space', // 启动键
         getDefaultInMainContent: (cfgFileName: string, startKey: string = 'space') => {
-            return `${CFG_CONFIG.BIND_US_STANDARD} "${startKey}" "+jump; exec ${cfgFileName};" 0\n`
+            return `${CFG_CONFIG.BIND_US_STANDARD} "${startKey}" "+jump; exec ${cfgFileName};"\n`
         },
         getInMainContent: (mainContent: string) => {
-            const reg = /bind_US_standard\s"(\w+)"\s".+sg_\w{8}\.cfg.*/m
+            const reg = /bind_US_standard\s"(\w+)"\s".+sg_\w{8}\.cfg.*\n/m
             const result = reg.exec(mainContent)
             if (!result) return null
             return {
@@ -98,6 +98,44 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
             }
         }
     },
+    zJitter: {
+        size: 1,
+        defaultStartKey: 'c', // 启动键
+        getDefaultInMainContent: (cfgFileName: string, startKey: string = 'c') => {
+            return `${CFG_CONFIG.BIND_US_STANDARD} "${startKey}" "+duck; exec ${cfgFileName};"\n`
+        },
+        getInMainContent: (mainContent: string) => {
+            const reg = /bind_US_standard\s"(\w+)"\s".+zJitter_\w{8}\.cfg.*\n/m
+            const result = reg.exec(mainContent)
+            if (!result) return null
+            return {
+                content: result[0],
+                start_key: result[1]
+            };
+        },
+        childCfgFilesReg: /zJitter_\w{8}\.cfg/m,
+        mainCfgContentConfig: {
+            matchFunc: (mainContent: string) => {
+                let result = /bind_US_standard\s+"(\w+)"\s.*(zJitter_\w{8}\.cfg)/m.exec(mainContent)
+                if (!result) return null;
+                return {
+                    start_key: result[1],
+                    childCfgName: result[2]
+                }
+            },
+        },
+        childCfgContentConfig:
+        {
+            0: {
+                name: 'z字回旋',
+                fields: [],
+                generateContentFunc: () => `${CFG_CONFIG.BIND_US_STANDARD} "MWHEELDOWN" "+jump; +forward; +moveleft"\n${CFG_CONFIG.BIND_US_STANDARD} "MWHEELUP" "+jump; +forward; +moveright"\n`,
+                matchFunc: () => {
+                    return {}
+                }
+            },
+        }
+    }
 }
 
 export {
