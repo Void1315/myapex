@@ -39,10 +39,10 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
                 start_key: result[1]
             };
         },
-        childCfgFilesReg: /sg_\w{8}\.cfg/mg,
+        childCfgFilesReg: /sg_\w{8}\.cfg/m,
         mainCfgContentConfig: {
             matchFunc: (mainContent: string) => {
-                let result = /bind_US_standard\s+"(\w+)"\s.*(sg_\w{8}\.cfg)/mg.exec(mainContent)
+                let result = /bind_US_standard\s+"(\w+)"\s.*(sg_\w{8}\.cfg)/m.exec(mainContent)
                 if (!result) return null;
                 return {
                     start_key: result[1],
@@ -65,7 +65,7 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
                 ],
                 generateContentFunc: (next_cfg: string, params: { start_max_fps: number } = { start_max_fps: 30 }) => `${CFG_CONFIG.BIND_US_STANDARD} "MWHEELDOWN" "+jump; fps_max ${params.start_max_fps}; exec ${next_cfg}"\n`,
                 matchFunc: (matchStr: string) => {
-                    let reg = /fps_max\s(\d+);/gm
+                    let reg = /fps_max\s(\d+);/m
                     let result = reg.exec(matchStr);
                     if (!result) return null;
                     return {
@@ -86,8 +86,10 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
                 ],
                 generateContentFunc: (next_cfg: string, params: { end_max_fps: number } = { end_max_fps: 0 }) => `${CFG_CONFIG.BIND} "MWHEELDOWN" "+duck; -duck; fps_max ${params.end_max_fps}; exec ${next_cfg}" 0\n`,
                 matchFunc: (matchStr: string) => {
-                    let reg = /fps_max\s(\d+);/gm
+                    let reg = /fps_max\s(\d+);/m
                     let result = reg.exec(matchStr);
+                    console.log('reg', result)
+
                     if (!result) return null;
                     return {
                         end_max_fps: parseInt(result[1])
