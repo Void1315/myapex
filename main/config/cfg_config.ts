@@ -31,7 +31,7 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
             return `${CFG_CONFIG.BIND_US_STANDARD} "${startKey}" "+jump; exec ${cfgFileName};"\n`
         },
         getInMainContent: (mainContent: string) => {
-            const reg = /bind_US_standard\s"(\w+)"\s".+sg_\w{8}\.cfg.*\n/m
+            const reg = /bind_US_standard\s+"(\S+)"\s".+sg_\w{8}\.cfg.*\n/m
             const result = reg.exec(mainContent)
             if (!result) return null
             return {
@@ -42,7 +42,7 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
         childCfgFilesReg: /sg_\w{8}\.cfg/m,
         mainCfgContentConfig: {
             matchFunc: (mainContent: string) => {
-                let result = /bind_US_standard\s+"(\w+)"\s.*(sg_\w{8}\.cfg)/m.exec(mainContent)
+                let result = /bind_US_standard\s+"(\S+)"\s.*(sg_\w{8}\.cfg)/m.exec(mainContent)
                 if (!result) return null;
                 return {
                     start_key: result[1],
@@ -105,7 +105,7 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
             return `${CFG_CONFIG.BIND_US_STANDARD} "${startKey}" "+duck; exec ${cfgFileName};"\n`
         },
         getInMainContent: (mainContent: string) => {
-            const reg = /bind_US_standard\s"(\w+)"\s".+zJitter_\w{8}\.cfg.*\n/m
+            const reg = /bind_US_standard\s+"(\S+)"\s".+zJitter_\w{8}\.cfg.*\n/m
             const result = reg.exec(mainContent)
             if (!result) return null
             return {
@@ -116,7 +116,7 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
         childCfgFilesReg: /zJitter_\w{8}\.cfg/m,
         mainCfgContentConfig: {
             matchFunc: (mainContent: string) => {
-                let result = /bind_US_standard\s+"(\w+)"\s.*(zJitter_\w{8}\.cfg)/m.exec(mainContent)
+                let result = /bind_US_standard\s+"(\S+)"\s.*(zJitter_\w{8}\.cfg)/m.exec(mainContent)
                 if (!result) return null;
                 return {
                     start_key: result[1],
@@ -130,6 +130,44 @@ const CHILD_CFG_CONFIG: { [key: string]: childCfgConfigProps } = {
                 name: 'z字回旋',
                 fields: [],
                 generateContentFunc: () => `${CFG_CONFIG.BIND_US_STANDARD} "MWHEELDOWN" "+jump; +forward; +moveleft"\n${CFG_CONFIG.BIND_US_STANDARD} "MWHEELUP" "+jump; +forward; +moveright"\n`,
+                matchFunc: () => {
+                    return {}
+                }
+            },
+        }
+    },
+    quickPickaUp: {
+        size: 1,
+        defaultStartKey: '`', // 启动键
+        getDefaultInMainContent: (cfgFileName: string, startKey: string = '`') => {
+            return `${CFG_CONFIG.BIND_US_STANDARD} "${startKey}" "+use; exec ${cfgFileName};"\n`
+        },
+        getInMainContent: (mainContent: string) => {
+            const reg = /bind_US_standard\s+"(\S+)"\s".+quickPickaUp_\w{8}\.cfg.*\n/m
+            const result = reg.exec(mainContent)
+            if (!result) return null
+            return {
+                content: result[0],
+                start_key: result[1]
+            };
+        },
+        childCfgFilesReg: /quickPickaUp_\w{8}\.cfg/m,
+        mainCfgContentConfig: {
+            matchFunc: (mainContent: string) => {
+                let result = /bind_US_standard\s+"(\S+)"\s.*(quickPickaUp_\w{8}\.cfg)/m.exec(mainContent)
+                if (!result) return null;
+                return {
+                    start_key: result[1],
+                    childCfgName: result[2]
+                }
+            },
+        },
+        childCfgContentConfig:
+        {
+            0: {
+                name: '快速拾取',
+                fields: [],
+                generateContentFunc: () => `${CFG_CONFIG.BIND_US_STANDARD} "MWHEELUP" "+use"\n${CFG_CONFIG.BIND_US_STANDARD} "MWHEELDOWN" "+use"\n`,
                 matchFunc: () => {
                     return {}
                 }

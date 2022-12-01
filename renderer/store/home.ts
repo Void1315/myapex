@@ -2,18 +2,22 @@ import { createSlice } from '@reduxjs/toolkit'
 
 type THomeState = {
     cfgData: any[],
-    apexRoot: string
+    apexRoot: string,
+    steamCommand: string,
+    originCommand: string
 }
 
 export const homeSlice = createSlice({
     name: 'home',
     initialState: {
         cfgData: [],
-        apexRoot: ''
+        apexRoot: '',
+        steamCommand: '',
+        originCommand: ''
     } as THomeState,
     reducers: {
         setState: (state, { payload }) => {
-            state = {...state, ...payload }
+            state = { ...state, ...payload }
             return state
         },
     }

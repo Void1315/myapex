@@ -43,5 +43,16 @@ export default (mainWindow: Electron.CrossProcessExports.BrowserWindow) => {
         })
     })
 
+    ipcMain.handle('getGameStartCommand', (_) => {
+        return new Promise((resolve, reject) => {
+            try{
+                console.log('cfg', cfg)
+                resolve(cfg?.getGameStartCommand())
+            }catch(e){
+                reject(e)
+            }
+        })
+    })
+
 }
 

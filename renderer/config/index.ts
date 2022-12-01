@@ -16,6 +16,10 @@ const KEY_MAP = [
             {
                 name: 'C',
                 value: 'c'
+            },
+            {
+                name: '`键',
+                value: '`'
             }
         ]
     },

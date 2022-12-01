@@ -1,6 +1,7 @@
 import { getRandomString } from '../../../utils'
 import CfgSgConfig from '../child/cfg_sg_config'
 import CfgZJitterConfig from '../child/cfg_z_jitter_config'
+import CfgQuickPickaUpConfig from '../child/cfg_quick_pick_up_config'
 import { CHILD_CFG_CONFIG } from '../../../config/cfg_config'
 import ChildCfgConfig from '../child/base_child'
 import fs from 'fs'
@@ -32,6 +33,12 @@ const SUPPORT_CHILD_CFG = [ // 当前支持的cfg
         name: 'zJitter',
         title: 'z字回旋',
         type: CfgZJitterConfig,
+        document: '',
+    },
+    {
+        name: 'quickPickaUp',
+        title: '快速拾取',
+        type: CfgQuickPickaUpConfig,
         document: '',
     }
 ]
@@ -199,6 +206,15 @@ class CfgMainConfig {
         } catch (err) {
             console.error(err)
             throw err;
+        }
+    }
+
+    public getGameStartCommand(){
+        const steamCommand = `+exec ${this.mainCfgFileName}`
+        const originCommand = `+exec ${this.mainCfgFileName.replaceAll('.cfg', '')}`
+        return {
+            steam: steamCommand,
+            origin: originCommand
         }
     }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React from 'react';
 import Head from 'next/head';
 import useStyles from '../styles/homeStyles'
 import Button from '@material-ui/core/Button';
@@ -8,22 +8,29 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { ipcRenderer } from 'electron'
 import { Tooltip, TextField, Select, MenuItem, InputLabel, FormControl, ListSubheader } from '@material-ui/core';
-import { Settings, Help } from '@material-ui/icons';
+import { Settings, Help, FileCopy } from '@material-ui/icons';
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, AppDispatch } from '../store'
 import debounce from 'lodash/debounce'
 import { KEY_MAP } from '../config'
+import { clipboard } from 'electron'
 function Home() {
   const classes = useStyles({});
   const dispatch = useDispatch<AppDispatch>()
-  const { apexRoot } = useSelector((state: RootState) => state.home)
+  const { apexRoot, steamCommand, originCommand } = useSelector((state: RootState) => state.home)
   const handleClick = async () => {
     ipcRenderer.invoke('openApexDir').then((data) => {
       console.log('openApexDir返回数据: ', data)
       const { path, cfgData: _cfgData } = data ?? {}
-
+      ipcRenderer.invoke('getGameStartCommand').then((data) => {
+        console.log('getGameStartCommand返回数据: ', data)
+        const { steam, origin } = data || {}
+        dispatch({ type: 'home/setState', payload: { steamCommand: steam, originCommand: origin } })
+      })
       dispatch({ type: 'home/setState', payload: { apexRoot: path, cfgData: _cfgData } })
     })
+
+
   };
 
   return (
@@ -57,6 +64,33 @@ function Home() {
         </Grid>
       </div>
       <ChildCfgForm />
+      {
+        apexRoot && <Grid container style={{ margin: '16px 0' }} >
+          <Grid container alignItems='center' justifyContent='space-between' style={{ margin: '8px 0' }}>
+            <Grid item>
+              <span >
+                启动命令(steam平台): {steamCommand}
+              </span>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" color="secondary" onClick={()=>clipboard.writeText(steamCommand)} startIcon={<FileCopy />}>复制启动命令</Button>
+            </Grid>
+          </Grid>
+
+          <Grid container alignItems='center' justifyContent='space-between'>
+            <Grid item>
+              <span >
+                启动命令(origin平台): {originCommand}
+              </span>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" color="secondary" onClick={()=>clipboard.writeText(originCommand)} startIcon={<FileCopy />}>复制启动命令</Button>
+            </Grid>
+          </Grid>
+        </Grid>
+
+      }
+
     </Container>
   );
 };
