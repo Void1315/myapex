@@ -1,7 +1,8 @@
 import { Drawer, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { Home as HomeIcon, Surfing as SurfingIcon, CloudDownload as CloudDownloadIcon, Help as HelpIcon, QuestionAnswer as QuestionAnswerIcon } from '@mui/icons-material'
 import { MouseEventHandler } from 'react';
-
+import { useDispatch } from 'react-redux'
+import { useRouter } from 'next/router'
 function defineConfigs<T extends string>(configs: Array<ROUTE_ITEM<T>>) {
     return configs;
 }
@@ -17,11 +18,11 @@ const ROUTE_MAP = defineConfigs([{
     name: '主页',
     icon: HomeIcon
 }, {
-    key: 'cfg_config',
+    key: 'cfgConfig',
     name: 'cfg身法修改',
     icon: SurfingIcon,
 }, {
-    key: 'cfg_cloud',
+    key: 'cfgCloud',
     name: 'CFG远程同步',
     icon: CloudDownloadIcon,
 }, {
@@ -37,10 +38,14 @@ const ROUTE_MAP = defineConfigs([{
 type ROUTE_KEY = typeof ROUTE_MAP[number]['key']
 
 const RouteList = ({ activeKey }: { activeKey: ROUTE_KEY }) => {
-
+    const dispatch = useDispatch()
+    const route = useRouter()
     const changeRoute: MouseEventHandler<HTMLDivElement> = (event) => {
-        const routeId = event.currentTarget.id
-        console.log('args', routeId)
+        const routeId = event.currentTarget.id;
+        if ('/' + routeId !== route.asPath) {
+            dispatch({ type: 'global/setState', payload: { activeRouteKey: routeId } })
+            route.push('/' + routeId)
+        }
     }
 
     return <Box>
@@ -60,15 +65,15 @@ const GlobalDrawer = ({ routeActiveKey }: { routeActiveKey: ROUTE_KEY }) => {
         <Box>
             <Drawer
                 sx={{
-                    width: 200,
+                    width: 260,
                     flexShrink: 0,
                     '& .MuiDrawer-paper': {
-                        width: 200,
+                        width: 260,
                         boxSizing: 'border-box',
+                        backgroundColor: 'transparent'
                     },
                 }}
                 variant="permanent"
-                anchor="left"
             >
                 <RouteList activeKey={routeActiveKey} />
             </Drawer>

@@ -7,12 +7,15 @@ import { theme } from '../lib/theme';
 import type { AppProps } from 'next/app';
 import '@fontsource/roboto';
 import store from '../store'
+import '../styles/global.css'
+
 export default function (props: AppProps) {
   const { Component, pageProps } = props;
 
   React.useEffect(() => {
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) {
+      //@ts-ignore
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);

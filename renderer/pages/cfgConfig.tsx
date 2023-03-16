@@ -5,6 +5,9 @@ import { Theme } from '@mui/material/styles'
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Link from '../components/Link';
+import DrawerLayout from '../layouts/DrawerLayout'
+import { useSelector } from 'react-redux'
+import { RootState } from '../store'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,7 +18,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function Next() {
+const CfgConfig = () => {
+  const { activeRouteKey } = useSelector((state: RootState) => state.global)
+  return <DrawerLayout routeActiveKey={activeRouteKey}><CfgConfigContent/></DrawerLayout>
+}
+
+function CfgConfigContent() {
   const classes = useStyles({});
 
   return (
@@ -41,4 +49,4 @@ function Next() {
   );
 };
 
-export default Next;
+export default CfgConfig;

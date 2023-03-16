@@ -1,11 +1,17 @@
 import GlobalDrawer, { ROUTE_KEY } from '../components/GlobalDrawer'
 import { Box } from '@mui/material'
 const DrawerLayout = ({ children, routeActiveKey }: { routeActiveKey: ROUTE_KEY, children: JSX.Element }) => {
-    return <Box sx={{ width: '100%' }}>
-        <Box width={260}>
+    return <Box sx={{ width: '100%', minHeight: '100vh', display: 'flex', backgroundColor: 'rgb(246,248,252)' , padding: '12px 0'}}>
+        <Box>
             <GlobalDrawer routeActiveKey={routeActiveKey} />
         </Box>
-        <Box minWidth={1100}>
+        <Box  width={'100%'} sx={{
+            backgroundColor: 'white',
+            boxShadow: 'inset 0 -1px 0 0 transparent',
+            borderRadius: '16px',
+            marginBottom: '16px',
+            overflowX: 'auto',
+        }}>
             {children}
         </Box>
     </Box>

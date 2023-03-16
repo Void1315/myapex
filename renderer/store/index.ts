@@ -1,8 +1,10 @@
 import homeSliceReducer from './home'
+import globalSliceReducer from './global'
 import { configureStore } from '@reduxjs/toolkit'
 const store = configureStore({
     reducer: {
-        home: homeSliceReducer
+        home: homeSliceReducer,
+        global: globalSliceReducer
     }
 })
 export type RootState = ReturnType<typeof store.getState>

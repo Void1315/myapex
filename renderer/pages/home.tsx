@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import useStyles from '../styles/homeStyles'
 import Button from '@mui/material/Button';
@@ -38,7 +38,7 @@ const HomeContent = () => {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md" sx={{minWidth: 800}}>
       <Head>
         <title>APEX cfg 快捷调整工具</title>
       </Head>
@@ -99,7 +99,12 @@ const HomeContent = () => {
   );
 };
 const Home = () => {
-  return <DrawerLayout routeActiveKey='home' children={HomeContent}></DrawerLayout>
+  const { activeRouteKey } = useSelector((state: RootState) => state.global)
+  useEffect(()=>{
+    console.log('activeRouteKey', activeRouteKey)
+
+  }, [activeRouteKey])
+  return <DrawerLayout routeActiveKey={activeRouteKey}><HomeContent/></DrawerLayout>
 }
 
 const ChildCfgForm = () => {

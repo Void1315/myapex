@@ -3,11 +3,10 @@ import Document, { Html, Head, Main, NextScript } from 'next/document';
 //@ts-ignore
 import { ServerStyleSheets } from '@mui/styles';
 import { theme } from '../lib/theme';
-
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en" dir="ltr">
+      <Html lang="zh-CN" dir="ltr" >
         <Head>
           <meta charSet="utf-8" />
           <meta name="theme-color" content={theme.palette.primary.main} />
@@ -16,7 +15,7 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
         </Head>
-        <body>
+        <body >
           <Main />
           <NextScript />
         </body>
