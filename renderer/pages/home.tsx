@@ -14,7 +14,11 @@ import { RootState, AppDispatch } from '../store'
 import debounce from 'lodash/debounce'
 import { KEY_MAP } from '../config'
 import { clipboard } from 'electron'
-function Home() {
+import DrawerLayout from '../layouts/DrawerLayout'
+
+
+
+const HomeContent = () => {
   const classes = useStyles({});
   const dispatch = useDispatch<AppDispatch>()
   const { apexRoot, steamCommand, originCommand } = useSelector((state: RootState) => state.home)
@@ -73,7 +77,7 @@ function Home() {
               </span>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="secondary" onClick={()=>clipboard.writeText(steamCommand)} startIcon={<FileCopy />}>复制启动命令</Button>
+              <Button variant="contained" color="secondary" onClick={() => clipboard.writeText(steamCommand)} startIcon={<FileCopy />}>复制启动命令</Button>
             </Grid>
           </Grid>
 
@@ -84,7 +88,7 @@ function Home() {
               </span>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="secondary" onClick={()=>clipboard.writeText(originCommand)} startIcon={<FileCopy />}>复制启动命令</Button>
+              <Button variant="contained" color="secondary" onClick={() => clipboard.writeText(originCommand)} startIcon={<FileCopy />}>复制启动命令</Button>
             </Grid>
           </Grid>
         </Grid>
@@ -94,7 +98,9 @@ function Home() {
     </Container>
   );
 };
-
+const Home = () => {
+  return <DrawerLayout routeActiveKey='home' children={HomeContent}></DrawerLayout>
+}
 
 const ChildCfgForm = () => {
   return <Grid container>
