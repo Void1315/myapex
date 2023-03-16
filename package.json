@@ -27,7 +27,7 @@
     "@mui/styles": "^5.11.13",
     "@types/lodash": "^4.14.189",
     "@types/node": "^16.11.7",
-    "@types/react": "^18.0.8",
+    "@types/react": "^18.0.28",
     "electron": "^20.1.0",
     "electron-builder": "^23.3.3",
     "next": "^12.2.5",

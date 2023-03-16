@@ -1,5 +1,6 @@
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
+//@ts-ignore
 import { ServerStyleSheets } from '@mui/styles';
 import { theme } from '../lib/theme';
 
