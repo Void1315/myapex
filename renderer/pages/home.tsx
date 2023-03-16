@@ -1,14 +1,14 @@
 import React from 'react';
 import Head from 'next/head';
 import useStyles from '../styles/homeStyles'
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid'
-import Switch from '@material-ui/core/Switch'
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid'
+import Switch from '@mui/material/Switch'
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 import { ipcRenderer } from 'electron'
-import { Tooltip, TextField, Select, MenuItem, InputLabel, FormControl, ListSubheader } from '@material-ui/core';
-import { Settings, Help, FileCopy } from '@material-ui/icons';
+import { Tooltip, TextField, Select, MenuItem, InputLabel, FormControl, ListSubheader } from '@mui/material';
+import { Settings, Help, FileCopy } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, AppDispatch } from '../store'
 import debounce from 'lodash/debounce'

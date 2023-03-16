@@ -1,4 +1,6 @@
-import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles'
+
 export default makeStyles((theme: Theme) =>
   createStyles({
     root: {
