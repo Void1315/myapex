@@ -14,3 +14,10 @@ yarn run dev
 ## 调试
 
 使用`vscode`进行调试，已配置好`launch.json`、`tasks.json`文件，请运行`Debug: All`配置即可。
+
+## TODO List
+
+- [ ] 完善身法cfg使用方法页面 **P0**
+- [ ] CI输出免安装包上传github。 **P1**
+- [ ] 云同步cfg配置 **P2**
+- [ ] 支持画面调节&控制的cfg配置 **P2**
