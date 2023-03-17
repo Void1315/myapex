@@ -70,7 +70,8 @@ const GlobalDrawer = ({ routeActiveKey }: { routeActiveKey: ROUTE_KEY }) => {
                     '& .MuiDrawer-paper': {
                         width: 260,
                         boxSizing: 'border-box',
-                        backgroundColor: 'transparent'
+                        backgroundColor: 'transparent',
+                        border: 'none'
                     },
                 }}
                 variant="permanent"

@@ -1,13 +1,8 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import useStyles from '../styles/cfgConfigStyles'
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid'
-import Switch from '@mui/material/Switch'
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { ipcRenderer } from 'electron'
-import { Tooltip, TextField, Select, MenuItem, InputLabel, FormControl, ListSubheader } from '@mui/material';
+import { Tooltip, TextField, Select, MenuItem, InputLabel, FormControl, ListSubheader, Grid, Switch, Typography, Button, Container } from '@mui/material';
 import { Settings, Help, FileCopy } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, AppDispatch } from '../store'
