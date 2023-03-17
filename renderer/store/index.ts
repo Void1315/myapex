@@ -1,9 +1,9 @@
-import homeSliceReducer from './home'
+import cfgConfigSliceReducer from './cfgConfig'
 import globalSliceReducer from './global'
 import { configureStore } from '@reduxjs/toolkit'
 const store = configureStore({
     reducer: {
-        home: homeSliceReducer,
+        cfgConfig: cfgConfigSliceReducer,
         global: globalSliceReducer
     }
 })

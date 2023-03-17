@@ -1,20 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-type THomeState = {
+type TCfgConfigState = {
     cfgData: any[],
     apexRoot: string,
     steamCommand: string,
     originCommand: string
 }
 
-export const homeSlice = createSlice({
-    name: 'home',
+export const cfgConfigSlice = createSlice({
+    name: 'cfgConfig',
     initialState: {
         cfgData: [],
         apexRoot: '',
         steamCommand: '',
         originCommand: ''
-    } as THomeState,
+    } as TCfgConfigState,
     reducers: {
         setState: (state, { payload }) => {
             state = { ...state, ...payload }
@@ -26,4 +26,4 @@ export const homeSlice = createSlice({
 // Action creators are generated for each case reducer function
 // export const { setState } = counterSlice.actions
 
-export default homeSlice.reducer
+export default cfgConfigSlice.reducer
